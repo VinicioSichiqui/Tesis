@@ -1,0 +1,94 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Clientes</h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-between flex-wrap">
+                        <button pButton pRipple type="button" class="p-button-success" label="Nuevo" [routerLink]="['/dashboard/cliente/gestion/crear']" icon="pi pi-plus"></button>
+                        <div class="">
+                            <input type="text" pInputText placeholder="Buscar por cédula" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()">
+                            <button pButton pRipple type="button" icon="pi pi-search" (click)="buscarPorTermino()"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-table id="table" [value]="clientes" [autoLayout]="true" [rows]="5" [paginator]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes" [showCurrentPageReport]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="persona.cedulaPersona">Cédula/RUC
+                                    <p-sortIcon field="persona.cedulaPersona"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="persona.nombresPersona">Nombres
+                                    <p-sortIcon field="persona.nombresPersona"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="persona.apellidosPersona">Apellidos
+                                    <p-sortIcon field="persona.apellidosPersona"></p-sortIcon>
+                                </th>
+
+                                <th pSortableColumn="persona.emailPersona">E-mail
+                                    <p-sortIcon field="persona.emailPersona"></p-sortIcon>
+                                </th>
+
+                                <th pSortableColumn="telefonoCliente">Celular
+                                    <p-sortIcon field="telefonoCliente"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="tipoCliente">Tipo
+                                    <p-sortIcon field="tipoCliente"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="estadoCliente">Estado
+                                    <p-sortIcon field="estadoCliente"></p-sortIcon>
+                                </th>
+                                <th>Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-cliente>
+                            <tr>
+                                <td>{{cliente?.persona.cedulaPersona}}</td>
+                                <td>{{cliente?.persona.nombresPersona}}</td>
+                                <td>{{cliente?.persona.apellidosPersona}}</td>
+                                <td>{{cliente?.persona.emailPersona || 'N/A'}}</td>
+                                <td>{{cliente?.telefonoCliente || 'N/A'}}</td>
+                                <td>{{cliente?.tipoCliente.descripcionTipoCliente || 'N/A'}}</td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="cliente.estadoCliente" [binary]="true" inputId="binary" (onChange)="actualizarEstado(cliente)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="cliente.estadoCliente; else baja">
+                                            Disponible
+                                        </div>
+                                        <ng-template #baja>
+                                            <div class="ml-2">
+                                                No Disponible
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="grid">
+                                        <div class="col-12">
+                                            <div class="flex justify-content-between flex-wrap">
+                                                <button pButton pRipple type="button" class="p-button-warning" icon="pi pi-pencil" [routerLink]="['/dashboard/cliente/gestion/editar', cliente.idCliente]">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                En total existen {{clientes ? clientes.length : 0 }} clientes.
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>

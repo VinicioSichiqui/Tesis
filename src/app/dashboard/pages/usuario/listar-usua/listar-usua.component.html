@@ -1,0 +1,126 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Usuarios</h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-between flex-wrap">
+                        <button pButton pRipple type="button" class="p-button-success" label="Nuevo" [routerLink]="['/dashboard/usuario/gestion/crear']" icon="pi pi-plus"></button>
+                        <div class="">
+                            <input type="text" pInputText placeholder="Buscar por cédula" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()">
+                            <button pButton pRipple type="button" icon="pi pi-search" (click)="buscarPorTermino()"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-table [value]="usuarios" [autoLayout]="true" [rows]="5" [paginator]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} proveedores" [showCurrentPageReport]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="persona.cedulaPersona">Cédula
+                                    <p-sortIcon field="persona.cedulaPersona"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="persona.nombresPersona">Nombres
+                                    <p-sortIcon field="persona.nombresPersona"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="persona.apellidosPersona">Apellidos
+                                    <p-sortIcon field="persona.apellidosPersona"></p-sortIcon>
+                                </th>
+                                <th>
+                                    E-mail
+                                </th>
+                                <th>
+                                    Estado
+                                </th>
+                                <th>
+                                    Asignar Rol
+                                </th>
+                                <th class="">Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-usuario>
+                            <tr>
+                                <td>{{usuario?.persona.cedulaPersona}}</td>
+                                <td>{{usuario?.persona.nombresPersona}}</td>
+                                <td>{{usuario?.persona.apellidosPersona}}</td>
+                                <td>{{usuario?.persona.emailPersona}}</td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="usuario.estadoUsuario" [binary]="true" inputId="binary" (onChange)="actualizarEstado(usuario)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="usuario.estadoUsuario; else baja">
+                                            Disponible
+                                        </div>
+                                        <ng-template #baja>
+                                            <div class="ml-2">
+                                                No Disponible
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <button pButton pRipple 
+                                            type="button" class="p-button-help" 
+                                            icon="pi pi-id-card"
+                                            (click)="showDialog(usuario)"
+                                            >
+                                    </button>
+                                </td>
+                                <td>
+                                    <button pButton pRipple type="button" class="p-button-warning" icon="pi pi-pencil" [routerLink]="['/dashboard/usuario/gestion/editar', usuario.idUsuario]">
+                                    </button>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                En total existen {{usuarios ? usuarios.length : 0 }} usuarios.
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<p-dialog header="Asignar Rol" [(visible)]="displayRol"  [style]="{width: '50vw'}" 
+    [draggable]="false" [resizable]="false" (onHide)="closeDialog()" >
+    <div class="grid">
+        <div class="col-12 flex justify-content-between">
+            <p-dropdown [options]="roles" appendTo="body" 
+                        [(ngModel)]="selectedRol" 
+                        optionLabel="descripcionRol" [filter]="true" 
+                        filterBy="descripcionRol" [showClear]="true" placeholder="Seleccion un rol"
+                        [emptyFilterMessage]="'Todos los roles agregados'">
+            
+            </p-dropdown>
+            <button pButton pRipple type="button" class="p-button-success" label="Agregar rol" (click)="agregarRol()"></button>
+        </div>
+    </div>
+    <div *ngIf="selectedUsuario?.roles">
+        <p-table [value]="selectedUsuario!.roles!" responsiveLayout="scroll">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rolUsuario>
+                <tr>
+                    <td>{{rolUsuario.rol.descripcionRol}}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="eliminarRol(rolUsuario)" ></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cerrar" styleClass="p-button-text p-button-danger"></p-button>
+    </ng-template>
+</p-dialog>

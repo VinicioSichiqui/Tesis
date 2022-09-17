@@ -1,0 +1,22 @@
+
+.img-background-caru{
+    background-image: url('../../../assets/img/fondo.jpeg') ;
+    background-repeat: round;
+    background-size: auto;
+}
+
+.img-container{
+    height: 190px;
+    width: 125px;
+}
+
+.img-container-car{
+    height: 220px;
+    width: 155px;
+}
+
+.border-cont{
+    border: 3px solid transparent;
+    border-radius: 22px;
+}
+

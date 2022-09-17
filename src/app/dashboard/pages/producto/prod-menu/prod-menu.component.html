@@ -1,0 +1,125 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Productos - Ménu</h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-end flex-wrap">
+                        <div class="">
+                            <input type="text" pInputText placeholder="Buscar por nombre" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()">
+                            <button pButton pRipple type="button" icon="pi pi-search" (click)="buscarPorTermino()"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-table [value]="productos" [autoLayout]="true" [rows]="5" [paginator]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="descripcionProducto">Nombre
+                                    <p-sortIcon field="descripcionProducto"></p-sortIcon>
+                                </th>
+                                <th>Image</th>
+                                <th pSortableColumn="precioVentaProducto">Precio
+                                    <p-sortIcon field="precioVentaProducto"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="stockProducto">Stock
+                                    <p-sortIcon field="stockProducto"></p-sortIcon>
+                                </th>
+                                <th >Menú</th>
+                                <th >Destacado</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-producto let-index>
+                            <tr>
+                                <td>{{producto.descripcionProducto}}</td>
+                                <td>
+                                    <div *ngIf="producto.imgProducto; else noImage" class="grid" style="max-width: 400px;">
+                                        <div class="col-12" >
+                                            <img    src="{{producto.imgProducto }}" 
+                                                    [alt]="producto.descripcionPresentacion" 
+                                                    style="cursor: pointer" 
+                                                    class="img-container p-shadow-4"
+                                                    (click)="imageClick(producto)" />
+                                        </div>
+                                    </div>
+                                    <ng-template #noImage>
+                                        <div class="grid" style="max-width: 400px;">
+                                            <div class="col-12" >
+                                                <img    src="{{ urlNoImage }}" 
+                                                        [alt]="'no-image'" 
+                                                        class="img-container p-shadow-4"/>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    
+                                </td>
+                                <td>{{producto.precioVentaProducto}}</td>
+                                <td>{{producto.stockProducto}}</td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="producto.menuClienteProducto" 
+                                                    [binary]="true" 
+                                                    inputId="binary"
+                                                    (onChange)="actualizarEstadoMenu(producto)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="producto.menuClienteProducto; else baja">
+                                            En menú
+                                        </div>
+                                        <ng-template #baja>
+                                            <div class="ml-2">
+                                                No menú
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="producto.destacarProducto" 
+                                                    [binary]="true" 
+                                                    inputId="binary"
+                                                    (onChange)="actualizarEstadoDestacar(producto)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="producto.destacarProducto; else destacado">
+                                            Destacado
+                                        </div>
+                                        <ng-template #destacado>
+                                            <div class="ml-2">
+                                                No Destacado
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                En total existen {{productos ? productos.length : 0 }} productos.
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<p-dialog header="Imagen" [(visible)]="displayCustom" [breakpoints]="[{'960px': '75vw'}]" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false" (onHide)="closeDialog()" >
+    <div *ngIf="selectedProducto" class="grid" >
+        <div class="col-12 w-full text-center" >
+            <img    src="{{ selectedProducto.imgProducto }}" 
+                    [alt]="selectedProducto.descripcionProducto" 
+                    style="max-width: 400px; max-height: 400px;"
+                    class="w-full p-shadow-4" />
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cerrar" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

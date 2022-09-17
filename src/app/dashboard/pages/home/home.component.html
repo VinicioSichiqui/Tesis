@@ -1,0 +1,31 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1 class="text-white">Home</h1>
+                    <div class="w-full flex justify-content-center">
+                        <div class="card w-10">
+                            <div class="flex flex-wrap justify-content-center card-container blue-containe " >
+                                <div    class="flex align-items-center justify-content-center surface-200 shadow-6  font-bold m-4 border-round cursor-pointer" 
+                                        style="min-width: 250px; min-height: 100px; "
+                                        *ngFor="let item of menu"
+                                        routerLink="/dashboard/{{item.routerLink}}"
+                                        >
+                                    <div class="grid">
+                                        <div class="col-12">
+                                            <i [class]="item.icon" style="font-size: 2rem"></i>
+                                        </div>
+                                        <div class="col-12">
+                                            {{item.label}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-card>
+    </div>
+</div>

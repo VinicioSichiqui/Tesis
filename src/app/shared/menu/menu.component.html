@@ -1,0 +1,6 @@
+<p-sidebar [(visible)]="menuService.display" [modal]="false" styleClass="contenedor surface-300" >
+    <br>
+    <br>
+    <p-panelMenu [model]="items"></p-panelMenu>
+</p-sidebar >
+<button pButton pRipple (click)="menuService.display = !menuService.display" type="button" icon="pi pi-bars" class="p-button-text p-button-help"></button>

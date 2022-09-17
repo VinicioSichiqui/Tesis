@@ -1,0 +1,189 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Gestión Ventas </h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-6">
+                    <div class="grid">
+                        <div class="col-12">
+                            <p-panel>
+                                <ng-template pTemplate="icons">
+                                    <div class="flex justify-content-center">
+                                        <span class="pi pi-users"></span>
+                                        <b class="ml-1">Datos Cliente</b>
+                                    </div>
+                                </ng-template> 
+                                <div class="flex justify-content-around w-full">
+                                    <p-dropdown [options]="clientes" 
+                                                placeholder="Cédula" 
+                                                class="w-full" 
+                                                styleClass="w-7" 
+                                                optionLabel="persona.cedulaPersona"
+                                                [filter]="true" filterBy="persona.cedulaPersona"
+                                                [showClear]="true"
+                                                [(ngModel)]="showCliente">
+                                        <ng-template let-cliente pTemplate="item">
+                                            <div>
+                                                <div>{{cliente.persona.cedulaPersona}} - {{cliente.persona.nombresPersona}} {{cliente.persona.apellidosPersona}}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                    <input type="text" pInputText [disabled]="true" class="w-full" [value]="mostrarNombre()">
+                                </div>
+                            </p-panel>
+                        </div>
+                    </div>
+                    <div class="grid">
+                        <div class="col-12">
+                            <p-panel  >
+                                <ng-template pTemplate="icons">
+                                    <div class="flex justify-content-center">
+                                        <span class="pi pi-briefcase"></span>
+                                        <b class="ml-1">Datos Producto</b>
+                                    </div>
+                                </ng-template>  
+                                <div class="flex justify-content-around w-full">
+                                    <p-dropdown [options]="productos" 
+                                                placeholder="Producto" 
+                                                class="w-full" 
+                                                styleClass="w-8" 
+                                                optionLabel="descripcionProducto" 
+                                                [showClear]="true"
+                                                [filter]="true" filterBy="descripcionProducto"
+                                                [(ngModel)]="showProducto">
+                                        <ng-template let-producto pTemplate="item">
+                                            <div>
+                                                <div>{{producto.descripcionProducto}} - stock:{{producto.stockProducto}}</div>
+                                            </div>
+                                        </ng-template>
+                                    </p-dropdown>
+                                    <input type="text" pInputText [disabled]="true" class="w-12" [value]="showProducto?.descripcionProducto || ''">
+                                </div>
+                                <div class="flex justify-content-between w-full mt-2">
+                                    <div class="w-6" >
+                                        <div class="grid" >
+                                            <div class="col-4" >
+                                                <span class="p-input-icon-left w-full "  >
+                                                    <i class="pi pi-plus"></i>
+                                                    <input type="number" min="0" pInputText placeholder="0" class="w-full" [(ngModel)]="cantidad" />
+                                                </span>
+                                            </div>
+                                            <div class="col-6">
+                                                <span class="p-input-icon-left w-full">
+                                                    <i class="pi pi-th-large"></i>
+                                                    <input type="number" pInputText [disabled]="true"  class="w-8" [value]="showProducto?.stockProducto || '0'" >
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-22rem">
+                                        <div class="grid">
+                                            <div class="col-6">
+                                                <span class="p-input-icon-left w-full">
+                                                    <i class="pi pi-dollar"></i>
+                                                    <input type="number" pInputText [disabled]="true"  class="w-full" [value]="showProducto?.precioVentaProducto || '0'">
+                                                </span>
+                                            </div>
+                                            <div class="col-6 flex justify-content-end">
+                                                <span class="p-input-icon-left w-full">
+                                                    <i class="pi pi-money-bill"></i>
+                                                    <input type="number" pInputText [disabled]="true"  class="w-full" [value]="(showProducto?.precioVentaProducto! * +cantidad).toFixed(2) || '0'">
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </p-panel>
+                            <div class="mt-5">
+                                <button pButton 
+                                        icon="pi pi-shopping-cart" pRipple 
+                                        type="button" label="Agregar Producto" 
+                                        class="p-button-outlined p-button-help"
+                                        (click)="agregarItem()">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <p-panel>
+                        <ng-template pTemplate="icons">
+                            <div class="flex justify-content-center">
+                                <span class="pi pi-book"></span>
+                                <b class="ml-1">Detalle Venta</b>
+                            </div>
+                        </ng-template>
+                        <div class=" flex justify-content-end mb-2">
+                            <label for="" class="mt-2">Cod venta: </label>
+                            <span class="p-input-icon-left ">
+                                <i class="pi pi-tag"></i>
+                                <input type="text" pInputText [disabled]="true"   [value]="codVenta" >
+                            </span>
+                        </div>
+                        <p-table [value]="itemsVenta" [scrollable]="true" scrollHeight="300px">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th >NRO</th>
+                                    <th >Producto</th>
+                                    <th >COD</th>
+                                    <th >Precio</th>
+                                    <th >Cantidad</th>
+                                    <th >Total</th>
+                                    <th *ngIf="!id">Acciones</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-itemVenta let-rowIndex="rowIndex">
+                                <tr>
+                                    <td>{{rowIndex + 1}}</td>
+                                    <td>{{itemVenta.producto.descripcionProducto}}</td>
+                                    <td>{{itemVenta.producto.codigoProducto}}</td>
+                                    <td>{{itemVenta.precioDetalleProductoVenta}}</td>
+                                    <td>{{itemVenta.cantidadDetalleProductoVenta}}</td>
+                                    <td>{{itemVenta.totalDetalleProductoVenta}}</td>
+                                    <td *ngIf="!id">
+                                        <div class="flex justify-content-between">
+                                            <button pButton pRipple 
+                                                    type="button" icon="pi pi-trash" 
+                                                    class="p-button-rounded p-button-danger p-button-outlined"
+                                                    (click)="quitarProductoItem(itemVenta.producto.idProducto)" *ngIf="!id">
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        <div class="grid mt-4">
+                            <div class="col-12 flex align-items-center justify-content-end">
+                                <label for="" class="mr-2">Total a Pagar: </label>
+                                <span class="p-input-icon-left">
+                                    <i class="pi pi-dollar"></i>
+                                    <input type="text" pInputText [disabled]="true"   [value]="totalVenta" >
+                                </span>
+                            </div>
+                        </div>
+                    </p-panel>
+                    <div class="mt-4">
+                        <div class="grid">
+                            <div class="col-12 flex justify-content-evenly h-4rem">
+                                <button pButton pRipple 
+                                        type="button" icon="pi pi-save" 
+                                        label="Guardar venta" class="p-button-raised p-button-success "
+                                        (click)="realizarAccion()">
+                                </button>
+                                <button pButton pRipple type="button" icon="pi pi-minus-circle" label="Limpiar" class="p-button-raised p-button-info" (click)="limpiar()"></button>
+                                <button pButton pRipple type="button" icon="pi pi-ban" label="Cancelar" class="p-button-raised p-button-danger" (click)="regresarPagina()"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+<!-- popup de confirmacion de eliminar  -->
+<p-confirmPopup></p-confirmPopup>
+<!-- Modal detalles -->

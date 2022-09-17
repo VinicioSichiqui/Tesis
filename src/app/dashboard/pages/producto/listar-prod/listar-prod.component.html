@@ -1,0 +1,172 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Productos</h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-between flex-wrap">
+                        <button pButton pRipple type="button" class="p-button-success" label="Nuevo" [routerLink]="['/dashboard/producto/gestion/crear']" icon="pi pi-plus"></button>
+                        <div class="">
+                            <input type="text" pInputText placeholder="Buscar por nombre" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()">
+                            <button pButton pRipple type="button" icon="pi pi-search" (click)="buscarPorTermino()"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-table [value]="productos" [autoLayout]="true" [rows]="5" [paginator]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos" [showCurrentPageReport]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+
+                                <th pSortableColumn="codigoProducto">Cod
+                                    <p-sortIcon field="codigoProducto"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="descripcionProducto">Nombre
+                                    <p-sortIcon field="descripcionProducto"></p-sortIcon>
+                                </th>
+                                <th>Image</th>
+                                <th pSortableColumn="precioVentaProducto">Precio
+                                    <p-sortIcon field="precioVentaProducto"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="stockProducto">Stock
+                                    <p-sortIcon field="stockProducto"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="estadoProducto">Estado
+                                    <p-sortIcon field="estadoProducto"></p-sortIcon>
+                                </th>
+                                <th>Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-producto let-index>
+                            <tr>
+                                <td>{{producto.codigoProducto}}</td>
+                                <td>{{producto.descripcionProducto}}</td>
+                                <td>
+                                    <div *ngIf="producto.imgProducto; else noImage" class="grid" style="max-width: 400px;">
+                                        <div class="col-12" >
+                                            <img    src="{{ producto.imgProducto }}" 
+                                                    [alt]="producto.descripcionPresentacion" 
+                                                    style="cursor: pointer" 
+                                                    class="img-container p-shadow-4"
+                                                    (click)="imageClick(producto)" />
+                                        </div>
+                                    </div>
+                                    <ng-template #noImage>
+                                        <div class="grid" style="max-width: 400px;">
+                                            <div class="col-12" >
+                                                <img    src="{{ urlNoImage }}" 
+                                                        [alt]="'no-image'" 
+                                                        class="img-container p-shadow-4"/>
+                                            </div>
+                                        </div>
+                                    </ng-template>
+                                    
+                                </td>
+                                <td>{{producto.precioVentaProducto}}</td>
+                                <td>{{producto.stockProducto}}</td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="producto.estadoProducto" 
+                                                    [binary]="true" 
+                                                    inputId="binary"
+                                                    (onChange)="actualizarEstado(producto)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="producto.estadoProducto; else baja">
+                                            Disponible
+                                        </div>
+                                        <ng-template #baja>
+                                            <div class="ml-2">
+                                                No Disponible
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="grid">
+                                        <div class="col-12">
+                                            <div class="flex justify-content-between flex-wrap">
+                                                <button pButton pRipple type="button" class="p-button-help" icon="pi pi-eye" (click)="showDialog(producto)">
+                                                </button>
+                                                <button pButton pRipple type="button" class="p-button-warning" icon="pi pi-pencil" [routerLink]="['/dashboard/producto/gestion/editar', producto.idProducto]">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                En total existen {{productos ? productos.length : 0 }} productos.
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+
+<p-dialog header="Detalles" [(visible)]="displayDetalles" [breakpoints]="[{'960px': '75vw'}]" [style]="{width: '50vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false" (onHide)="closeDialog()">
+    <div class="grid" *ngIf="selectedProducto">
+        <div class="col-12">
+            <p-table [value]="[selectedProducto]">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Marca</th>
+                        <th>Presentación</th>
+                        <th>Zona</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-producto>
+                    <tr>
+                        <td>{{producto.fechaIngreso}}</td>
+                        <td>
+                            <div class="" *ngIf="producto?.marca; else na">
+                                {{producto?.marca?.nombreMarca}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="" *ngIf="producto?.presentacion; else na">
+                                {{producto?.presentacion?.nombrePresentacion}}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="" *ngIf="producto?.zona; else na">
+                                {{producto?.zona?.nombreZona}}
+                            </div>
+
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+            <ng-template #na>
+                N/A
+            </ng-template>
+
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cerrar" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="Imagen" [(visible)]="displayCustom" [breakpoints]="[{'960px': '75vw'}]" [style]="{width: '50vw'}" [baseZIndex]="10000"
+    [draggable]="false" [resizable]="false" (onHide)="closeDialog()" >
+    <div *ngIf="selectedProducto" class="grid" >
+        <div class="col-12 w-full text-center" >
+            <img    src="{{ selectedProducto.imgProducto }}" 
+                    [alt]="selectedProducto.descripcionProducto" 
+                    style="max-width: 400px; max-height: 400px;"
+                    class="w-full p-shadow-4" />
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cerrar" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

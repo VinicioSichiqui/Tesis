@@ -1,0 +1,129 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Gestión Proveedores</h1>
+                </div>
+            </ng-template>
+            <form [formGroup]="proveedorForm">
+                <div class="grid border-1 border-300 border-round">
+                    <div class="col-4">
+                        <div class="field">
+                            <label for="nombreProveedor" class="block">Nombre:</label>
+                            <input type="text" pInputText placeholder="Nombre" formControlName="nombreProveedor" />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('nombreProveedor')">
+                                Campo requerido.
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="rucProveedor" class="block">Ruc:</label>
+                            <input type="text" pInputText placeholder="ruc" formControlName="rucProveedor" />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('rucProveedor')">
+                                {{rucErrorMsg()}}
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="emailProveedor" class="block">E-mail:</label>
+                            <input type="email" pInputText placeholder="Email" formControlName="emailProveedor"/>
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('emailProveedor')">
+                                {{emailErrorMsg()}}
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="field">
+                            <label for="telefonoProveedor" class="block">Teléfono:</label>
+                            <input  type="text" 
+                                    pInputText
+                                    placeholder="Teléfono" formControlName="telefonoProveedor"> 
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('telefonoProveedor')">
+                                {{numErrorMsg('telefonoProveedor')}}
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="movilProveedor" class="block">Móvil:</label>
+                            <input  type="text" 
+                                    pInputText
+                                    placeholder="099...."
+                                    formControlName="movilProveedor"> 
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('movilProveedor')">
+                                {{numErrorMsg('movilProveedor')}}
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="direccionProveedor" class="block">Dirección:</label>
+                            <textarea rows="1" cols="22" pInputTextarea [autoResize]="true" formControlName="direccionProveedor"></textarea>
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('direccionProveedor')">
+                                Campo requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="">
+                            <label for="" class="block">Detalles:</label>
+                            <div class="mt-2">
+                                <button pButton pRipple type="button" label="Agregar" (click)="showDialog()" class="p-button-help w-4"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- buttons -->
+            <div class="grid">
+                <hr>
+                <div class="col-12 flex justify-content-evenly mt-2">
+                    <button pButton pRipple type="button" label="Guardar" class="w-2" (click)="realizarAccion()"></button>
+                    <button pButton pRipple type="button" label="Eliminar" class="p-button-danger w-2" *ngIf="id && selectedProveedor" (click)="eliminar($event)"></button>
+                    <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-text w-2" [routerLink]="'/dashboard/proveedor'"></button>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+<!-- popup de confirmacion de eliminar  -->
+<p-confirmPopup></p-confirmPopup>
+<!-- Modal detalles -->
+<p-dialog header="Detalles" [(visible)]="displayDetalles" [breakpoints]="[{'960px': '75vw'}]" [style]="{width: '30vw'}"
+    [draggable]="false" [resizable]="false">
+    <div class="grid">
+    </div>
+    <form [formGroup]="detallesForm">
+        <div class="grid">
+            <div class="col-12" >
+                <div class="field">
+                    <label for="fechaIngresoDetalleProveedor" class="block">Fecha:</label>
+                    <p-calendar appendTo="body" 
+                                styleClass="w-full" 
+                                dateFormat="yy-mm-dd" 
+                                inputId="dateformat" 
+                                placeholder="yyyy/mm/dd"
+                                formControlName="fechaIngresoDetalleProveedor">
+                    </p-calendar>
+                </div>
+                <div class="field">
+                    <label for="cuidadDetalleProveedor" class="block">Ciudad:</label>
+                    <input  type="text" 
+                            pInputText
+                            class="w-full"
+                            placeholder="Ciudad"
+                            formControlName="cuidadDetalleProveedor"> 
+                </div>
+                <div class="field">
+                    <label for="descripcionDetalleProveedor" class="block">Descripción:</label>
+                    <textarea rows="1" class="w-full" pInputTextarea formControlName="descripcionDetalleProveedor"></textarea>
+                </div>
+            </div>
+        </div>
+    </form>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cancelar" styleClass="p-button-text"></p-button>
+        <button pButton pRipple type="button" (click)="GuardarDetalles()" label="Guardar"></button>
+    </ng-template>
+</p-dialog>

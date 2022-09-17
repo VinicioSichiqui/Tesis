@@ -1,0 +1,62 @@
+<div class="bg-blue-900 w-full flex flex-column">
+    <div class="center flex justify-content-center flex-wrap mt-3">
+        <div class="flex align-items-center ">
+            <p-card styleClass="w-full">
+                <div class="grid w-12" >
+                    <div class="col-12 flex justify-content-center w-12">
+                        <form   autocomplete="off"
+                                [formGroup]="logInForm"
+                                (ngSubmit)="logIn()"
+                                class="w-12">
+                            <div class="text-center">
+                                <img src="assets/img/logo_login.jpeg" alt="" class="w-8" >
+                            </div>
+                            <!-- input email -->
+                            <div class="text-center">
+                                <span class="p-input-icon-right">
+                                    <i class="pi pi-user"></i>
+                                    <input  id="email"
+                                            type="email"
+                                            class="border-round" 
+                                            pInputText 
+                                            placeholder="Cédula"
+                                            formControlName="cedula"/>
+                                </span>
+                            </div>
+                            <!-- error msg -->
+                            <small  class="p-error block"
+                                    *ngIf="verificarCampo('cedula')">
+                                {{cedulaErrorMsg()}}
+                            </small>
+                            <!-- input password -->
+                            <div class="mt-2 text-center">
+                                <p-password [inputStyleClass]="'border-round'"
+                                            [styleClass]="'border-round'"
+                                            [toggleMask]="true" 
+                                            [feedback]="false" 
+                                            placeholder="Password"
+                                            formControlName="password">
+                                </p-password>
+                            </div>
+                            <!-- Error msg -->
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('password')">
+                                Campo requerido.
+                            </small>
+                            <!-- Login button -->
+                            <div class="flex justify-content-center">
+                                <button pButton 
+                                        pRipple 
+                                        type="submit" 
+                                        label="Log In" 
+                                        class="p-button-rounded mt-2 w-full"
+                                        [disabled]="logInForm.pending">
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>

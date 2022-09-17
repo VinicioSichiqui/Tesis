@@ -1,0 +1,90 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Gestión Usuarios</h1>
+                </div>
+            </ng-template>
+            <form [formGroup]="usuarioForm" autocomplete="off">
+                <div class="grid border-1 border-300 border-round">
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="nombresPersona" class="block">Nombres:</label>
+                            <input type="text" pInputText placeholder="Nombres" formControlName="nombresPersona" />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('nombresPersona')">
+                                Campo requerido.
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="apellidosPersona" class="block">Apellidos:</label>
+                            <input type="text" pInputText placeholder="Apellidos" formControlName="apellidosPersona" />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('apellidosPersona')">
+                                Campo requerido.
+                            </small>
+                        </div>
+                        <div class="field">
+                            <label for="emailPersona" class="block">E-mail:</label>
+                            <input type="email" pInputText placeholder="Email" formControlName="emailPersona" autocomplete="off"  />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('emailPersona')">
+                                Campo requerido
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="field">
+                            <label for="cedulaPersona" class="block">Cédula(Usuario):</label>
+                            <input type="text" class="w-5" pInputText placeholder="Cédula( Usuario )" formControlName="cedulaPersona" />
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('cedulaPersona')">
+                                {{cedulaErrorMsg()}}
+                            </small>
+                        </div>
+                        <div class="field" *ngIf="!id">
+                            <label for="passwordUsuario" class="block">Password:</label>
+                            <p-password formControlName="passwordUsuario" 
+                                        weakLabel="Débil"
+                                        mediumLabel="Media"
+                                        strongLabel="Fuerte"
+                                        [toggleMask]="true"
+                                        styleClass="w-5" 
+                                        inputStyleClass="w-full">
+                                <ng-template pTemplate="header">
+                                    <h5>Ingrese una contraseña</h5>
+                                </ng-template>
+                                <ng-template pTemplate="footer">
+                                    <hr>
+                                    <p class="mt-2">Sugerencias</p>
+                                    <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+                                        <li>Mínimo 8 caracteres</li>
+                                        <li>Al menos una minúscula</li>
+                                        <li>Al menos una mayúscula</li>
+                                        <li>Al menos un número</li>
+                                    </ul>
+                                </ng-template>
+                            </p-password>
+                            <small  class="p-error block"
+                                *ngIf="verificarCampo('passwordUsuario')">
+                                Campo requerido
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <!-- buttons -->
+            <div class="grid">
+                <hr>
+                <div class="col-12 flex justify-content-evenly mt-2">
+                    <button pButton pRipple type="button" label="Guardar" class="w-2" (click)="realizarAccion()"></button>
+                    <button pButton pRipple type="button" label="Eliminar" class="p-button-danger w-2" *ngIf="id && selectedUsuario" (click)="eliminar($event)"></button>
+                    <button pButton pRipple type="button" label="Cancelar" class="p-button-raised p-button-text w-2" [routerLink]="'/dashboard/usuario'"></button>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+<!-- popup de confirmacion de eliminar  -->
+<p-confirmPopup></p-confirmPopup>

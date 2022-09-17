@@ -1,0 +1,143 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Ventas</h1>
+                </div>
+            </ng-template>
+            <div class="grid">
+                <div class="col-12">
+                    <div class="flex justify-content-between flex-wrap">
+                        <button pButton pRipple type="button" class="p-button-success" label="Nuevo" [routerLink]="['/dashboard/venta/gestion/crear']" icon="pi pi-plus"></button>
+                        <div class="">
+                            <input type="text" pInputText placeholder="Buscar por código" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()">
+                            <button pButton pRipple type="button" icon="pi pi-search" (click)="buscarPorTermino()"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-table [value]="ventas" [autoLayout]="true" [rows]="5" [paginator]="true" responsiveLayout="scroll" [rowHover]="true" dataKey="id" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ventas" [showCurrentPageReport]="true">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th pSortableColumn="codigoVenta">Código Venta
+                                    <p-sortIcon field="codigoCompra"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="cliente.persona.nombresPersona">Cliente
+                                    <p-sortIcon field="cliente.persona.nombresPersona"></p-sortIcon>
+                                <th pSortableColumn="fechaVenta">Fecha
+                                    <p-sortIcon field="fechaVenta"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="totalVenta">Total
+                                    <p-sortIcon field="totalVenta"></p-sortIcon>
+                                </th>
+                                <th pSortableColumn="estadoVenta">Estado
+                                    <p-sortIcon field="estadoVenta"></p-sortIcon>
+                                </th>
+                                <th>Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-venta>
+                            <tr>
+                                <td>{{venta.codigoVenta}}</td>
+                                <td>{{venta.cliente.persona.nombresPersona | titlecase}} {{venta.cliente.persona.apellidosPersona | titlecase}}</td>
+                                <td>
+                                    <p-calendar dateFormat="yy-mm-dd" appendTo="body" 
+                                                inputId="dateformat" placeholder="yyyy/mm/dd" 
+                                                [(ngModel)]="venta.fechaVenta"
+                                                [disabled]="!venta.estadoVenta"
+                                                (onSelect)="actualizarFecha($event, venta.idVenta)">
+                                    </p-calendar>
+                                </td>
+                                <td>{{venta.totalVenta | currency: 'USD'}}</td>
+                                <td>
+                                    <div class="field-checkbox">
+                                        <p-checkbox [(ngModel)]="venta.estadoVenta" *ngIf="venta.estadoVenta" [binary]="true" inputId="binary" (onChange)="actualizarEstado(venta)">
+                                        </p-checkbox>
+                                        <div class=" ml-2" *ngIf="venta.estadoVenta; else baja">
+                                            Disponible
+                                        </div>
+                                        <ng-template #baja>
+                                            <div class="ml-2">
+                                                No Disponible
+                                            </div>
+                                        </ng-template>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <div class="grid">
+                                        <div class="col-12">
+                                            <div class="flex justify-content-between flex-wrap">
+                                                <button pButton pRipple type="button" class="p-button-help" icon="pi pi-eye" (click)="showDialog(venta)">
+                                                </button>
+                                                <button pButton pRipple type="button" class="p-button-danger" icon="pi pi-trash" (click)="eliminar($event, venta.idVenta)">
+                                                </button>
+                                                <button pButton pRipple type="button" class="p-button-warning" icon="pi pi-pencil" [routerLink]="['/dashboard/venta/gestion/editar', venta.idVenta]" *ngIf="venta.estadoVenta">
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="flex align-items-center justify-content-between">
+                                En total existen {{ventas ? ventas.length : 0 }} ventas.
+                            </div>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
+<!-- popup de confirmacion de eliminar  -->
+<p-confirmPopup></p-confirmPopup>
+<p-dialog header="Detalles" [(visible)]="displayDetalles" [breakpoints]="[{'960px': '75vw'}]" [style]="{width: '30vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false" (onHide)="closeDialog()">
+    <div class="grid" *ngIf="selectedVenta">
+        <div class="col-12 text-center">
+            <h5>Bar Escolar</h5>
+        </div>
+        <div class="col-12 flex justify-content-between">
+            <span>Cuenca</span>
+            <span>{{diaActual | date: 'YYYY-M-dd'}}</span>
+            <span>HORA: {{ diaActual | date: 'mediumTime'}}</span>
+        </div>
+        <div class="col-12">
+            Cod. Venta: {{selectedVenta.codigoVenta}}
+            <br>
+            Cliente: {{selectedVenta.cliente?.persona?.nombresPersona}}  {{selectedVenta.cliente?.persona?.nombresPersona}}
+            <br> CI: {{selectedVenta.cliente?.persona?.cedulaPersona}}
+            <br> Tel/Mov: {{selectedVenta.cliente?.telefonoCliente || 'N/A'}}
+            <br> E-mail: {{selectedVenta.cliente?.persona?.emailPersona}}
+            <hr>
+        </div>
+        <table class="w-full">
+            <thead>
+                <tr>
+                    <th class="text-left">Cant.</th>
+                    <th class="text-left">Producto</th>
+                    <th class="text-left">Precio Uni.</th>
+                    <th class="text-left">Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of selectedVenta.items">
+                    <td>{{item.cantidadDetalleProductoVenta}}</td>
+                    <td>{{item.producto?.descripcionProducto}}</td>
+                    <td>{{item.precioDetalleProductoVenta}}</td>
+                    <td>{{item.totalDetalleProductoVenta}}</td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                    <td><b>TOTAL:</b></td>
+                    <td>{{selectedVenta.totalVenta}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button (click)="closeDialog()" label="Cerrar" styleClass="p-button-text"></p-button>
+    </ng-template>
+</p-dialog>

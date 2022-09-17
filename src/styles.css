@@ -1,0 +1,65 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    margin: 0;
+    background-color: var(--surface-300);
+    font-family:  var(--font-family);
+}
+
+.text-layout{
+    color: var(--text-color);
+}
+.p-card{
+    box-shadow: none !important;
+}
+
+.img-container{
+    width: 50px;
+    height: 50px;
+}
+.p-shadow-4 {
+    box-shadow: 0 2px 4px -1px rgb(0 0 0 / 20%), 0 4px 5px 0 rgb(0 0 0 / 14%), 0 1px 10px 0 rgb(0 0 0 / 12%);
+}
+
+.p-galleria-mask.p-component-overlay {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.p-badge.p-badge-warning {
+    color: #fff !important;
+}
+
+/* scroll */
+
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+.contenedor{
+    overflow: scroll;
+}
+.contenedor::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.contenedor::-webkit-scrollbar:vertical {
+    width:10px;
+}
+
+.contenedor::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+    display: none;
+} 
+
+.contenedor::-webkit-scrollbar:horizontal {
+    height: 10px;
+}
+
+.contenedor::-webkit-scrollbar-thumb {
+    background-color: #797979;
+    border-radius: 20px;
+    border: 2px solid #f1f2f3;
+}
+
+.contenedor::-webkit-scrollbar-track {
+    border-radius: 10px;  
+}
+
+.disabled {
+    cursor: none;
+}

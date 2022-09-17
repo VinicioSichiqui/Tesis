@@ -1,0 +1,71 @@
+<div class="grid text-layout">
+    <div class="col-12">
+        <p-card>
+            <ng-template pTemplate="header">
+                <div class="text-center">
+                    <h1>Reporte Ventas</h1>
+                </div>
+            </ng-template>
+            <p-table  [value]="ventas"   responsiveLayout="scroll" [rows]="10" 
+                [rowsPerPageOptions]="[10,25,50]" [loading]="loading"
+                [paginator]="true" currentPageReportTemplate="motrando {first} to {last} de {totalRecords} productos">
+                <ng-template pTemplate="caption">
+                    <div class="grid">
+                        <div class="col-6">
+                            <div class="flex justify-content-between ">
+                                <p-calendar inputId="basic" appendTo="body" [(ngModel)]="fechaInicio"  placeholder="Fecha Inicio"></p-calendar>
+                                <p-calendar inputId="basic" appendTo="body" [(ngModel)]="fechaFin"  placeholder="Fecha Fin"></p-calendar>
+                                <button type="button" pButton 
+                                        pRipple label="Filtrar Búsqueda" 
+                                        class="p-button-success"
+                                        (click)="getVentasPorFechas()"></button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="flex justify-content-between align-items-center">
+                                <button type="button" pButton 
+                                        pRipple icon="pi pi-file-pdf" 
+                                        label="Generar PDF" class="p-button-warning mr-2" 
+                                        (click)="generarPdf()"></button>
+                                <input type="text" pInputText placeholder="Buscar por cédula" [(ngModel)]="termino" (keyup)="verificarTermino()" (keyup.enter)="buscarPorTermino()"> 
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Cédula</th>
+                        <th>Fecha</th>
+                        <th>Total Venta</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-venta >
+                    <tr >
+                        <td >
+                            {{venta.codigoVenta}}
+                        </td>
+                        <td >
+                            {{venta.cliente.persona.nombresPersona}}
+                        </td>
+                        <td >
+                            {{venta.cliente.persona.apellidosPersona}}
+                        </td>
+                        <td >
+                            {{venta.cliente.persona.cedulaPersona}}
+                        </td>
+                        <td >
+                            {{venta.fechaVenta}}
+                        </td>
+                        <td >
+                            {{venta.totalVenta | currency: 'USD'}}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-card>
+    </div>
+</div>
+

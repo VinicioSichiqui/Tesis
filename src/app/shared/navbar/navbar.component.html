@@ -1,0 +1,12 @@
+<p-toolbar class="p-0" [styleClass]="'bg-white'">
+    <div class="p-toolbar-group-left">
+        <app-menu></app-menu>
+    </div>
+    
+    <div class="p-toolbar-group-right">
+        <i class="pi pi-bell mr-4 p-text-secondary" pBadge style="font-size: 2rem" [value]="notificacionesMenu.length.toString()" severity="warning" (click)="notificaciones.toggle($event)"></i>
+        <p-tieredMenu #notificaciones [model]="menuNoti" [popup]="true" styleClass="w-3" ></p-tieredMenu>
+        <button #btn type="button" pButton icon="pi pi-user" class="p-button-help" (click)="menu.toggle($event)"></button>
+        <p-tieredMenu #menu [model]="items" [popup]="true"></p-tieredMenu>
+    </div>
+</p-toolbar>
